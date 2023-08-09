@@ -27,11 +27,6 @@ internal class OpretBruger
 
             byte[] HashedPS = hasher.Hash( PS);
 
-            //Console.WriteLine(password);
-            //Console.WriteLine(BitConverter.ToString(salt).Replace("-", ""));
-            //Console.WriteLine(BitConverter.ToString(HashedPS).Replace("-", ""));
-            //Console.ReadKey();
-
 
             try
             {
@@ -40,24 +35,21 @@ internal class OpretBruger
                 {
                     connection.Open();
 
-                    string QHasedPS = BitConverter.ToString(HashedPS).Replace("-", "");
-                    string QSalt = BitConverter.ToString(salt).Replace("-", "");
+                    string QHasedPS = Convert.ToBase64String(HashedPS).Replace("-", "");
+                    string QSalt = Convert.ToBase64String(salt).Replace("-", "");
 
-                    Console.WriteLine(QSalt);
-                    Console.WriteLine(QHasedPS);
-                    Console.ReadKey();
 
-                    // Parameterized query
+                    // Parameter for query
                     string sqlQuery = "INSERT INTO users (Username, PassHash, Salt) VALUES (@username, @QHashedPS, @QSalt)";
 
                     using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
                     {
-                        // Provide parameter values
+                        // giver parameter values
                         command.Parameters.AddWithValue("@username", username);
                         command.Parameters.AddWithValue("@QHashedPS", QHasedPS);
                         command.Parameters.AddWithValue("@QSalt", QSalt);
 
-                        // Execute the query
+                        // Executer query
                         command.ExecuteNonQuery();
                     }
 
